@@ -45,11 +45,17 @@ clear = Button(content, text="clear", command=clear_txt, width=92)
 
 img = Button(content, text="Image", image=button_img, width=915, height=230)
 
-dis_name = Label(content, text="Disease Name", width=91, height=3)
+dis_name = Text(content, width=91, height=3)
+dis_name.insert("1.0", "Disease Name")
+dis_name.config(state='disabled')
 
-about_dis = Label(content, text="About Disease", width=45, height=25)
+about_dis = Text(content, width=45, height=25)
+about_dis.insert("1.0", "About Disease")
+about_dis.config(state='disabled')
 
-precau = Label(content, text="Precautions", width=45, height=25)
+precau = Text(content, width=45, height=25)
+precau.insert("1.0", "Precaution of Disease")
+precau.config(state='disabled')
 
 
 title.grid(column=0, row=0, columnspan=4)
