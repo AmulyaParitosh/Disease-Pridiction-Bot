@@ -2,7 +2,7 @@ import pickle
 import pandas as pd
 from tkinter import *
 from tkinter import ttk
-from npl import weightadder
+from nltk.tokenize import word_tokenize
 
 with open('./model.pkl', 'rb') as file:
     model = pickle.load(file, errors='ignore')
@@ -11,6 +11,8 @@ dis_df = pd.read_csv('./data.csv', index_col='disease')
 
 df = pd.read_csv("./symptoms-weight.csv", index_col='Disease')
 sympts = df.columns.tolist()
+
+sevrty = pd.read_csv("Symptom-severity.csv", index_col="Symptom")
 
 
 def predict(data: list):
@@ -23,6 +25,30 @@ def predict(data: list):
     prediction = model.predict(data)[0]
 
     return prediction
+
+
+def weightadder(sen):
+
+    filtered_list = word_tokenize(sen)
+
+    lst = []
+
+    for i in sympts:
+        s_symp = i.split("_")
+        present = True
+
+        for s in s_symp:
+            if s not in filtered_list:
+                present = False
+                break
+
+        if present:
+            weight = sevrty.loc[i, "weight"]
+            lst.append(weight)
+        else:
+            lst.append(0)
+
+    return lst
 
 
 def add_symptom():
