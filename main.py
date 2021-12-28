@@ -92,6 +92,8 @@ if __name__ == "__main__":
 
     root = Tk()
 
+    root.attributes("-fullscreen", True)
+
     content = ttk.Frame(root, padding=(10, 10, 10, 10))
     frame = Frame(content, borderwidth=4,
                   relief="ridge", width=1710, height=955)
