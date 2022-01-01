@@ -2,17 +2,30 @@ import pickle
 import pandas as pd
 from tkinter import *
 from tkinter import ttk
-from nltk.tokenize import word_tokenize
 
-with open('./model.pkl', 'rb') as file:
+
+with open('./classifire.pkl', 'rb') as file:
     model = pickle.load(file, errors='ignore')
+
 
 dis_df = pd.read_csv('./data.csv', index_col='disease')
 
-df = pd.read_csv("./symptoms-weight.csv", index_col='Disease')
+df = pd.read_csv("./disease_symptoms_weight.csv",
+                 index_col='Disease').iloc[:, 1:]
+
+related_sympts = pd.read_csv('./related_symptoms.csv', index_col="symptom1")
+
 sympts = df.columns.tolist()
 
-sevrty = pd.read_csv("Symptom-severity.csv", index_col="Symptom")
+sevrty = pd.read_csv("symptom_severity.csv", index_col="Symptom")
+
+
+shown_list = list(map(lambda x: x.replace("_", " "), sympts))
+shown_list = list(map(lambda x: "   "+x, shown_list))
+
+real_in_sympt_lst = []
+
+txt_state = 0
 
 
 def predict(data: list):
@@ -27,48 +40,66 @@ def predict(data: list):
     return prediction
 
 
-def weightadder(sen):
+def weightadder(lst: list):
 
-    filtered_list = word_tokenize(sen)
+    if len(lst) < 3:
+        dis_err("to_few_symptoms")
+        return
 
-    lst = []
+    input_symptoms = lst
 
-    for i in sympts:
-        s_symp = i.split("_")
-        present = True
+    rsi = related_sympts.index.tolist()
 
-        for s in s_symp:
-            if s not in filtered_list:
-                present = False
-                break
+    for i in lst:
+        if i in rsi:
+            input_symptoms.append(related_sympts.loc[i, 'symptom2'])
 
-        if present:
+    input_symptoms_list = []
+
+    for s in sympts:
+        if s in input_symptoms:
             weight = sevrty.loc[i, "weight"]
-            lst.append(weight)
+            input_symptoms_list.append(weight)
         else:
-            lst.append(0)
+            input_symptoms_list.append(0)
 
-    return lst
+    return input_symptoms_list
 
 
 def add_symptom():
-    sympt = sympt_list.get(sympt_list.curselection())
-    txt.insert(END, sympt+" ")
+    sympt = sympts[sympt_list.curselection()[0]]
+
+    real_in_sympt_lst.append(sympt)
+
+    global txt_state
+
+    if txt_state:
+        show_to_user = sympt.replace("_", " ")
+        txt.insert(END, ", "+show_to_user)
+    else:
+        show_to_user = sympt.replace("_", " ")
+        txt.insert(END, show_to_user)
+        txt_state = 1
 
 
 def clear_txt():
     txt.delete('1.0', END)
+    global txt_state
+    txt_state = 0
+
+
+def dis_err(err_type):
+
+    if err_type == "to_few_symptoms":
+        dis_name.config(text="Please Enter at least 3 Symptoms")
 
 
 def predict_dis():
-    sen = txt.get("1.0", END)
-    input_sympts_lst = weightadder(sen)
-    disease = predict(input_sympts_lst)
 
-    dis_name.config(state='normal')
-    dis_name.delete("1.0", END)
-    dis_name.insert("1.0", disease)
-    dis_name.config(state='disabled')
+    input_sympts_lst = weightadder(real_in_sympt_lst)
+    disease = predict(input_sympts_lst).lower()
+
+    dis_name.config(text=disease.upper())
 
     out = dis_df.loc[disease]
 
@@ -87,51 +118,69 @@ def predict_dis():
         precau.insert(str(2*i+3)+".0", str(i+1) + ") " + preco.lstrip()+"\n\n")
     precau.config(state='disabled')
 
+    real_in_sympt_lst.clear()
+
 
 if __name__ == "__main__":
 
+    light_blue = "#17C3B2"
+    blue = "#44D8D6"
+    bg_color_brrr = "#ebebde"
+    fore = "#4f4747"
+
     root = Tk()
 
-    root.attributes("-fullscreen", True)
+    root.attributes('-fullscreen', True)
+
+    s = ttk.Style()
+    s.configure('new.TFrame', background="#343A40")
 
     content = ttk.Frame(root, padding=(10, 10, 10, 10))
-    frame = Frame(content, borderwidth=4,
-                  relief="ridge", width=1710, height=955)
+    content.config(style="new.TFrame")
+    frame = Frame(content)
 
-    button_img = PhotoImage(file="button_img.png")
+    body_font = "Dyuthi 15"
 
-    title = Label(content, text="Disease Pridiction Bot",
-                  width=188, height=3, background="grey")
+    root.option_add("*font", body_font)
+    root['bg'] = "black"
 
-    about = Label(content, text="This is about our project",
-                  width=95, height=10)
+    title = Label(content, text="Disease Prediction Bot", width=47,
+                  height=2, background="grey", font="Dyuthi 40", bg="#343A40", foreground=blue)
+
+    about = Button(content, text="This is about our project",
+                   width=60, height=8, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
     speak = Button(content, text="press to speak",
-                   width=45, height=19)
+                   width=21, height=17, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
-    add_sympt = Button(content, text="Add Symptom",
-                       command=add_symptom, width=43, height=3)
+    add_sympt = Button(content, text="Add Symptom", command=add_symptom, width=36,
+                       height=2, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
-    var2 = StringVar()
-    var2.set(sympts)
-    sympt_list = Listbox(content, listvariable=var2, width=46, height=15)
+    sl = StringVar()
+    sl.set(shown_list)
 
-    txt = Text(content, width=95, height=7)
+    sympt_list = Listbox(content, listvariable=sl,
+                         width=38, height=14, font=body_font, background=bg_color_brrr, selectbackground=light_blue, foreground=fore)
 
-    clear = Button(content, text="clear", command=clear_txt, width=92)
+    txt = Text(content, width=60, height=5, padx=15,
+               pady=15, font=body_font, background=bg_color_brrr, foreground=fore)
 
-    do_predict = Button(content, text="Image", image=button_img,
-                        command=predict_dis, width=915, height=230)
+    clear = Button(content, text="clear", command=clear_txt,
+                   width=60, height=1, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
-    dis_name = Text(content, width=91, height=3)
-    dis_name.insert("1.0", "Disease Name")
-    dis_name.config(state='disabled')
+    do_predict = Button(content, text="Click to Predict", command=predict_dis,
+                        width=60, height=8, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
-    about_dis = Text(content, width=45, height=25)
+    dis_name = Label(content, text="Disease Name will occur here", width=44, height=2,
+                     background=bg_color_brrr,  activebackground=light_blue, foreground=fore, font="Dyuthi 21")
+
+    about_dis = Text(content, width=29, height=22,
+                     wrap='word', padx=15, pady=15, font=body_font, spacing2=5, background=bg_color_brrr, foreground=fore)
     about_dis.insert("1.0", "About Disease")
     about_dis.config(state='disabled')
 
-    precau = Text(content, width=45, height=25)
+    precau = Text(content, width=28, height=22, wrap='word',
+                  padx=15, pady=15, font=body_font, background=bg_color_brrr,  foreground=fore)
     precau.insert("1.0", "Precaution of Disease")
     precau.config(state='disabled')
 
