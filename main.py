@@ -11,7 +11,7 @@ with open('./classifire.pkl', 'rb') as file:
 dis_df = pd.read_csv('./data.csv', index_col='disease')
 
 df = pd.read_csv("./disease_symptoms_weight.csv",
-                 index_col='Disease').iloc[:, 1:]
+                 index_col='Disease').iloc[:, 1:-1]
 
 related_sympts = pd.read_csv('./related_symptoms.csv', index_col="symptom1")
 
@@ -98,6 +98,8 @@ def predict_dis():
 
     input_sympts_lst = weightadder(real_in_sympt_lst)
     disease = predict(input_sympts_lst).lower()
+
+    print(f"\nDisease - {disease}\n")
 
     dis_name.config(text=disease.upper())
 
