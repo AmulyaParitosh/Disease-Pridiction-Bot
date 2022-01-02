@@ -2,6 +2,7 @@ import pickle
 import pandas as pd
 from tkinter import *
 from tkinter import ttk
+import predictor
 
 
 with open('./classifire.pkl', 'rb') as file:
@@ -18,6 +19,7 @@ related_sympts = pd.read_csv('./related_symptoms.csv', index_col="symptom1")
 sympts = df.columns.tolist()
 
 sevrty = pd.read_csv("symptom_severity.csv", index_col="Symptom")
+sevrty.sort_index(inplace=True)
 
 
 shown_list = list(map(lambda x: x.replace("_", " "), sympts))
@@ -26,18 +28,6 @@ shown_list = list(map(lambda x: "   "+x, shown_list))
 real_in_sympt_lst = []
 
 txt_state = 0
-
-
-def predict(data: list):
-
-    lst = pd.DataFrame(data).transpose()
-    col = df.columns.tolist()
-    lst.columns = col
-    data = lst
-
-    prediction = model.predict(data)[0]
-
-    return prediction
 
 
 def weightadder(lst: list):
@@ -58,7 +48,7 @@ def weightadder(lst: list):
 
     for s in sympts:
         if s in input_symptoms:
-            weight = sevrty.loc[i, "weight"]
+            weight = sevrty.loc[s, "weight"]
             input_symptoms_list.append(weight)
         else:
             input_symptoms_list.append(0)
@@ -87,6 +77,8 @@ def clear_txt():
     global txt_state
     txt_state = 0
 
+    real_in_sympt_lst.clear()
+
 
 def dis_err(err_type):
 
@@ -97,7 +89,7 @@ def dis_err(err_type):
 def predict_dis():
 
     input_sympts_lst = weightadder(real_in_sympt_lst)
-    disease = predict(input_sympts_lst).lower()
+    disease = predictor.predict(input_sympts_lst).lower()
 
     print(f"\nDisease - {disease}\n")
 
@@ -108,7 +100,7 @@ def predict_dis():
     about_dis.config(state='normal')
     about_dis.delete("1.0", END)
     about_dis.insert("1.0", 'Discription :\n\n')
-    about_dis.insert("3.0", out['discription'])
+    about_dis.insert("3.0", out['description'])
     about_dis.config(state='disabled')
 
     precautions = out['precautions'].split(",")
@@ -119,8 +111,6 @@ def predict_dis():
     for i, preco in enumerate(precautions):
         precau.insert(str(2*i+3)+".0", str(i+1) + ") " + preco.lstrip()+"\n\n")
     precau.config(state='disabled')
-
-    real_in_sympt_lst.clear()
 
 
 if __name__ == "__main__":
