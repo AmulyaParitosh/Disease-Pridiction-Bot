@@ -38,11 +38,11 @@ def weightadder(lst: list):
 
     input_symptoms = lst
 
-    rsi = related_sympts.index.tolist()
+    # rsi = related_sympts.index.tolist()
 
-    for i in lst:
-        if i in rsi:
-            input_symptoms.append(related_sympts.loc[i, 'symptom2'])
+    # for i in lst:
+    #     if i in rsi:
+    #         input_symptoms.append(related_sympts.loc[i, 'symptom2'])
 
     input_symptoms_list = []
 
