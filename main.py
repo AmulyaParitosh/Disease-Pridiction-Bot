@@ -123,7 +123,7 @@ if __name__ == "__main__":
     content.config(style="new.TFrame")
     frame = Frame(content)
 
-    body_font = "Dyuthi 15"
+    body_font = "Dyuthi 18"
 
     root.option_add("*font", body_font)
     root['bg'] = "black"
@@ -131,36 +131,36 @@ if __name__ == "__main__":
     title = Label(content, text="Disease Prediction Bot", width=47,
                   height=2, background="grey", font="Dyuthi 40", bg="#343A40", foreground=blue)
 
-    about = Button(content, text="This is about our project",
-                   width=60, height=8, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
+    about = Button(content, text="People can interact with the bot just like they\n do with another human and through a series of queries,\n chatbot will identify the symptoms of the user and thereby,\n predicts the disease and recommends treatment.",
+                   width=45, height=6, background=bg_color_brrr,  activebackground=light_blue, foreground=fore, font="Dyuthi 20")
 
-    add_sympt = Button(content, text="Add Symptom", command=add_symptom, width=60, height=3,
-                       font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
+    add_sympt = Button(content, text="Add Symptom", command=add_symptom, width=39, height=2,
+                       font="Dyuthi 23", background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
     sl = StringVar()
     sl.set(shown_list)
 
     sympt_list = Listbox(content, listvariable=sl,
-                         width=62, height=14, font=body_font, background=bg_color_brrr, selectbackground=light_blue, foreground=fore)
+                         width=51, height=14, font=body_font, background=bg_color_brrr, selectbackground=light_blue, foreground=fore)
 
-    txt = Text(content, width=60, height=5, padx=15,
+    txt = Text(content, width=49, height=3.2, padx=15,
                pady=15, font=body_font, background=bg_color_brrr, foreground=fore)
 
     clear = Button(content, text="clear", command=clear_txt,
-                   width=60, height=1, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
+                   width=50, height=1, background=bg_color_brrr,  activebackground=light_blue, foreground=fore, font="Dyuthi 18")
 
     do_predict = Button(content, text="Click to Predict", command=predict_dis,
-                        width=60, height=8, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
+                        width=31, height=4, background=bg_color_brrr,  activebackground=light_blue, foreground=fore, font="Dyuthi 30")
 
-    dis_name = Label(content, text="Disease Name will occur here", width=44, height=2,
-                     background=bg_color_brrr,  activebackground=light_blue, foreground=fore, font="Dyuthi 21")
+    dis_name = Label(content, text="Disease Name will occur here", width=38, height=2,
+                     background=bg_color_brrr,  activebackground=light_blue, foreground=fore, font="Dyuthi 25")
 
-    about_dis = Text(content, width=29, height=22,
+    about_dis = Text(content, width=25, height=19,
                      wrap='word', padx=15, pady=15, font=body_font, spacing2=5, background=bg_color_brrr, foreground=fore)
     about_dis.insert("1.0", "About Disease")
     about_dis.config(state='disabled')
 
-    precau = Text(content, width=28, height=22, wrap='word',
+    precau = Text(content, width=24, height=19, wrap='word',
                   padx=15, pady=15, font=body_font, background=bg_color_brrr,  foreground=fore)
     precau.insert("1.0", "Precaution of Disease")
     precau.config(state='disabled')
