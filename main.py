@@ -134,14 +134,14 @@ if __name__ == "__main__":
     about = Button(content, text="This is about our project",
                    width=60, height=8, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
-    add_sympt = Button(content, text="Add Symptom", command=add_symptom, width=36,
-                       height=2, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
+    add_sympt = Button(content, text="Add Symptom", command=add_symptom, width=60, height=3,
+                       font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
     sl = StringVar()
     sl.set(shown_list)
 
     sympt_list = Listbox(content, listvariable=sl,
-                         width=38, height=14, font=body_font, background=bg_color_brrr, selectbackground=light_blue, foreground=fore)
+                         width=62, height=14, font=body_font, background=bg_color_brrr, selectbackground=light_blue, foreground=fore)
 
     txt = Text(content, width=60, height=5, padx=15,
                pady=15, font=body_font, background=bg_color_brrr, foreground=fore)
@@ -167,7 +167,6 @@ if __name__ == "__main__":
 
     title.grid(column=0, row=0, columnspan=4)
     about.grid(column=0, row=1, columnspan=2)
-    # speak.grid(column=0, row=2, rowspan=2)
     add_sympt.grid(column=0, row=2, columnspan=2)
     sympt_list.grid(column=0, row=3, columnspan=2)
     txt.grid(column=0, row=4, columnspan=2)
