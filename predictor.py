@@ -27,8 +27,6 @@ def predict(data: list):
     dis_series = pd.Series(dis_df.index)
     order = dis_series.loc[order].values.tolist()
 
-    # print(order)
-
     pred_nor_mean = regressor.predict(lst)[0]
 
     ll = pred_nor_mean-0.1
@@ -43,8 +41,6 @@ def predict(data: list):
     for i in order:
         if i in reg_proba:
             return i
-
-    # print(pred_nor_mean)
 
     return order[0]
 
