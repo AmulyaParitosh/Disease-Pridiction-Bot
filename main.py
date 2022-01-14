@@ -1,4 +1,3 @@
-import pickle
 import pandas as pd
 from tkinter import *
 from tkinter import ttk
