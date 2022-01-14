@@ -5,10 +5,6 @@ from tkinter import ttk
 import predictor
 
 
-with open('./classifire.pkl', 'rb') as file:
-    model = pickle.load(file, errors='ignore')
-
-
 dis_df = pd.read_csv('./data.csv', index_col='disease')
 
 df = pd.read_csv("./disease_symptoms_weight.csv",
