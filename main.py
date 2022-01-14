@@ -14,8 +14,6 @@ dis_df = pd.read_csv('./data.csv', index_col='disease')
 df = pd.read_csv("./disease_symptoms_weight.csv",
                  index_col='Disease').iloc[:, 1:-1]
 
-related_sympts = pd.read_csv('./related_symptoms.csv', index_col="symptom1")
-
 sympts = df.columns.tolist()
 
 sevrty = pd.read_csv("symptom_severity.csv", index_col="Symptom")
@@ -37,12 +35,6 @@ def weightadder(lst: list):
         return
 
     input_symptoms = lst
-
-    # rsi = related_sympts.index.tolist()
-
-    # for i in lst:
-    #     if i in rsi:
-    #         input_symptoms.append(related_sympts.loc[i, 'symptom2'])
 
     input_symptoms_list = []
 
@@ -142,9 +134,6 @@ if __name__ == "__main__":
     about = Button(content, text="This is about our project",
                    width=60, height=8, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
-    speak = Button(content, text="press to speak",
-                   width=21, height=17, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
-
     add_sympt = Button(content, text="Add Symptom", command=add_symptom, width=36,
                        height=2, font=body_font, background=bg_color_brrr,  activebackground=light_blue, foreground=fore)
 
@@ -178,9 +167,9 @@ if __name__ == "__main__":
 
     title.grid(column=0, row=0, columnspan=4)
     about.grid(column=0, row=1, columnspan=2)
-    speak.grid(column=0, row=2, rowspan=2)
-    add_sympt.grid(column=1, row=2)
-    sympt_list.grid(column=1, row=3)
+    # speak.grid(column=0, row=2, rowspan=2)
+    add_sympt.grid(column=0, row=2, columnspan=2)
+    sympt_list.grid(column=0, row=3, columnspan=2)
     txt.grid(column=0, row=4, columnspan=2)
     clear.grid(column=0, row=5, columnspan=2)
     do_predict.grid(column=2, row=1, columnspan=2)
